@@ -1,0 +1,1 @@
+java -jar C:\Users\Administrator\Desktop\signapk.jar C:\Users\Administrator\Desktop\cache\SlientInstall_20150818\Zip\platform.x509.pem C:\Users\Administrator\Desktop\cache\SlientInstall_20150818\Zip\platform.pk8 C:\Users\Administrator\Desktop\silentInstall.apk C:\Users\Administrator\Desktop\newsilentInstall.apk

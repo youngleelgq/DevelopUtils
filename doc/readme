@@ -1,0 +1,44 @@
+1.本静默安装必须要有root
+2.非root情况的静默安装本项目中暂不可用,如下
+    /****
+     * 表示安装时以更新方式安装，即app不存在时安装，否则进行卸载再安装
+     ****/
+    private static final int INSTALL_REPLACE_EXISTING = 0x00000002;
+//静默安装,失败!!方法未找到
+    public void installPackage() {
+        PackageInstallObserver installObserver = new PackageInstallObserver();
+        try {
+            Class<?> ServiceManager = Class.forName("android.os.ServiceManager");
+            Method getService = ServiceManager.getDeclaredMethod("getService", String.class);
+            getService.setAccessible(true);
+            IBinder packAgeBinder = (IBinder) getService.invoke(null, "package");
+            IPackageManager iPm = IPackageManager.Stub.asInterface(packAgeBinder);
+            iPm.installPackage(Uri.fromFile(new File(path)), installObserver, INSTALL_REPLACE_EXISTING, new File(path).getPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                installObserver.packageInstalled(null, -1);
+            } catch (RemoteException ignore) {
+
+            }
+        }
+    }
+
+    /**
+     * 安装监听
+     */
+    public class PackageInstallObserver extends IPackageInstallObserver.Stub {
+
+        @Override
+        public void packageInstalled(String packageName, int returnCode) throws RemoteException {
+            if (returnCode == 1) //返回1表示安装成功，否则安装失败
+            {
+                Toast.makeText(MainActivity.this, "安装成功！", Toast.LENGTH_SHORT).show();
+                Log.e("Installed", "packageName=" + packageName + ",returnCode=" + returnCode);
+            } else {
+                Toast.makeText(MainActivity.this, "安装失败！", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
